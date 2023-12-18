@@ -56,7 +56,7 @@ int main(void) {
     board[player2[0] * 2 + 1][player2[1] * 2 + 1] = 4;
     board[3][2] = 1;
 
-//
+//sdfsdfdsf
 
     printBoard(board, 2 * n + 1);
     return 0;
