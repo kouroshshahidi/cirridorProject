@@ -30,10 +30,12 @@ int printBoard(int arr[][50], int n) {
     int sw = 0;
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            if (arr[i][j] == 1 && j % 2 == 0) printf("%c%c%c", 124, 254, 124);
-            else if (arr[i][j] == 0 && j % 2 == 0) printf("%c %c", 124, 124);
+
+            if (arr[i][j] == 1 && (j == 0 || j == n - 1))printf("%c%c%c", 124, 254, 124);
             else if (arr[i][j] == 1 && (j == 0 || j == n - 1))printf("%c%c%c", 124, 254, 124);
-            else if (arr[i][j] == 1 && (i == 0 || i == n - 1) && sw % 2 == 0)printf("-----|");
+            else if (arr[i][j] == 0 && j % 2 == 0) printf("%c %c", 124, 124);
+            else if (arr[i][j] == 1 && j % 2 == 0) printf("|%c|", 254);
+            else if (arr[i][j] == 1 && j % 2 == 1) printf("%c%c%c%c%c", 196, 124, 254, 124, 196);
             else if (arr[i][j] == 0 && j % 2 == 1) printf("%c%c%c%c%c", 196, 196, 196, 196, 196);
             else if (arr[i][j] == 2) printf("     ");
             else if (arr[i][j] == 3) wprintf(L"  %c  ", 0x2606);
@@ -83,7 +85,7 @@ int p1wall , p2wall;
         scanf("%d %d %c", &wallx , &wally , &rotation);
         placeWall(board ,wallx,wally,rotation);
     }
-
+    printf("\n");
     printf("how many wall does p2 want to place?");
     scanf("%d" , &p2wall);
     for (int i = 0; i < p2wall; ++i) {
@@ -94,13 +96,13 @@ int p1wall , p2wall;
         placeWall(board ,wallx,wally,rotation);
     }
 //test print board
-
-intprintBoard(board, 2 * n + 1);
+    printf("\n");
+//intprintBoard(board, 2 * n + 1);
 
 
 //print board
 
-//printBoard(board, 2 * n + 1);
+printBoard(board, 2 * n + 1);
 
     return 0;
 }
