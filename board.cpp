@@ -1,6 +1,20 @@
 #include <stdio.h>
 #include <wchar.h>
+int placeWall(int board[][50] , int wallx ,int wally , char rotation){
+    if(rotation == 'H'){
+        for (int i = 0; i < 5; ++i) {
+            board[2*wallx + 2][2*wally + i] = 1;
+        }
+    }
+    if(rotation == 'V'){
+        for (int i = 0; i < 5; ++i) {
+            board[2*wallx + i][2*wally +2] = 1;
+        }
+    }
 
+
+    return 0;
+}
 int intprintBoard(int arr[][50], int n) {
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
@@ -35,6 +49,7 @@ int printBoard(int arr[][50], int n) {
 int main(void) {
     //makes n by n board and makes it look good
     int n;
+    printf("dimention of board:");
     scanf("%d", &n);
     int board[50][50] = {{0}}; // board[2n +1][2n+1]
     for (int i = 0; i < 2 * n + 1; ++i) {
@@ -50,14 +65,42 @@ int main(void) {
 
 //places players in position
     int player1[2], player2[2];
+    printf("position of p1?");
     scanf("%d %d", &player1[0], &player1[1]);
+    printf("position of p2?");
     scanf("%d %d", &player2[0], &player2[1]);
     board[player1[0] * 2 + 1][player1[1] * 2 + 1] = 3;
     board[player2[0] * 2 + 1][player2[1] * 2 + 1] = 4;
-    board[3][2] = 1;
 
-//sdfsdfdsf
+//place walls
+int p1wall , p2wall;
+    printf("how many wall does p1 want to place?");
+    scanf("%d" , &p1wall);
+    for (int i = 0; i < p1wall; ++i) {
+        int wallx , wally;
+        char rotation;
+        printf("where do you want your wall?");
+        scanf("%d %d %c", &wallx , &wally , &rotation);
+        placeWall(board ,wallx,wally,rotation);
+    }
 
-    printBoard(board, 2 * n + 1);
+    printf("how many wall does p2 want to place?");
+    scanf("%d" , &p2wall);
+    for (int i = 0; i < p2wall; ++i) {
+        int wallx , wally;
+        char rotation;
+        printf("where do you want your wall?");
+        scanf("%d %d %c", &wallx , &wally , &rotation);
+        placeWall(board ,wallx,wally,rotation);
+    }
+//test print board
+
+intprintBoard(board, 2 * n + 1);
+
+
+//print board
+
+//printBoard(board, 2 * n + 1);
+
     return 0;
 }
