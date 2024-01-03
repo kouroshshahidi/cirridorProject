@@ -8,10 +8,6 @@ struct player{
     int wallNumber;
 
 };
-
-
-
-
 int checkObstruction(int board[][50] , player player , char direction){
     int currentX =2*(player.x)+1, currentY = 2*(player.y)+1;
     if(direction == 'w'){
@@ -30,14 +26,13 @@ int checkObstruction(int board[][50] , player player , char direction){
     return 0;
 }
 
-void makeSwBoard (int n, int board[][50], int swBoard[][50]) {
+void makeClone (int n, int board[][50], int clonedBoard[][50]) {
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            swBoard[i][j] = board[i][j];
+            clonedBoard[i][j] = board[i][j];
         }
     }
 }
-
 
 int placeWall(int n ,int board[][50] , int wallx ,int wally , char rotation){
 
@@ -63,6 +58,65 @@ int placeWall(int n ,int board[][50] , int wallx ,int wally , char rotation){
         }
 
     return -1;
+}
+
+int deleteWall(int n ,int board[][50] , int wallx ,int wally , char rotation){
+
+    if (rotation == 'H') {
+        if (wallx != 0 && 2*wallx < 2*n + 1 &&  2 * wally + 4 < 2*n +1 && wally >= 0) {
+            for (int i = 0; i < 5; ++i) {
+                board[2 * wallx][2 * wally + i] = 0;
+            }
+            return 0;
+        } else{
+            return -1;
+        }
+    }
+    if (rotation == 'V') {
+        if (wally != 0 && 2*wally < 2*n + 1 &&  2 * wallx + 4 < 2*n +1 && wallx >= 0) {
+            for (int i = 0; i < 5; ++i) {
+                board[2 * wallx + i][2 * wally] = 0;
+            }
+            return 0;
+        } else{
+            return -1;
+        }
+    }
+
+    return -1;
+}
+
+int intprintBoard(int arr[][50], int n) {
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            printf("%d ", arr[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
+
+int printBoard(int arr[][50], int n) {
+    int sw = 0;
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+
+            if (arr[i][j] == 1 && (j == 0 || j == n - 1))printf("%c%c%c", 124, 254, 124);
+            else if (arr[i][j] == 1 && (j == 0 || j == n - 1))printf("%c%c%c", 124, 254, 124);
+            else if (arr[i][j] == 0 && j % 2 == 0) printf("%c %c", 124, 124);
+            else if (arr[i][j] == 1 && j % 2 == 0) printf("|%c|", 254);
+            else if (arr[i][j] == 1 && j % 2 == 1) printf("%c%c%c%c%c", 196, 124, 254, 124, 196);
+            else if (arr[i][j] == 0 && j % 2 == 1) printf("%c%c%c%c%c", 196, 196, 196, 196, 196);
+            else if (arr[i][j] == 2) printf("     ");
+            else if (arr[i][j] == 3) wprintf(L"  %c  ", 0x2606);
+            else if (arr[i][j] == 4) wprintf(L"  %c  ", 0x2604);
+            sw++;
+        }
+        printf("\n");
+    }
+
+    return 0;
 }
 
 int move(int board[][50],player &player , char direction){
@@ -105,43 +159,111 @@ int move(int board[][50],player &player , char direction){
             board[2*(player.y) +1][2*(player.x) +1] = 4;
         return 1;
     }
-
-    printf("cant move!\nplease try again\n");
     return 0;
 }
 
-int intprintBoard(int arr[][50], int n) {
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            printf("%d ", arr[i][j]);
-        }
-        printf("\n");
+int castraydown(int n ,const int board[][50],int x ,int y){
+
+
+
+
+
+
+        while(y != 2*n  && board[y][x] != 1)
+            y++;
+
+
+
+    if(y == n-1){
+
+
+        return 1;
     }
-
-    return 0;
+    else return 0;
 }
-int printBoard(int arr[][50], int n) {
-    int sw = 0;
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
 
-            if (arr[i][j] == 1 && (j == 0 || j == n - 1))printf("%c%c%c", 124, 254, 124);
-            else if (arr[i][j] == 1 && (j == 0 || j == n - 1))printf("%c%c%c", 124, 254, 124);
-            else if (arr[i][j] == 0 && j % 2 == 0) printf("%c %c", 124, 124);
-            else if (arr[i][j] == 1 && j % 2 == 0) printf("|%c|", 254);
-            else if (arr[i][j] == 1 && j % 2 == 1) printf("%c%c%c%c%c", 196, 124, 254, 124, 196);
-            else if (arr[i][j] == 0 && j % 2 == 1) printf("%c%c%c%c%c", 196, 196, 196, 196, 196);
-            else if (arr[i][j] == 2) printf("     ");
-            else if (arr[i][j] == 3) wprintf(L"  %c  ", 0x2606);
-            else if (arr[i][j] == 4) wprintf(L"  %c  ", 0x2604);
-            sw++;
+int findpath(int n ,int board[][50],player targerPlayer ) {
+    int cloneboard[50][50];
+    player clonePlayer;
+    clonePlayer = targerPlayer;
+    makeClone(n, board, cloneboard);
+    int identifier = 0 , count =0;
+
+    if(clonePlayer.id == 1) {
+        char rotation = 's';
+        while (checkObstruction(cloneboard, clonePlayer, 's') != 1) {
+            if(move(cloneboard, clonePlayer, 's') == 0) return 0;
+            identifier = castraydown(n,cloneboard , clonePlayer.x*2+1 , clonePlayer.y*2+1);
         }
-        printf("\n");
-    }
 
+        while (count < 100) {
+            if(identifier == 1) break;
+            while (checkObstruction(cloneboard, clonePlayer, rotation) == 1) {
+                switch (rotation) {
+                    case 's' :
+                        rotation = 'd';
+                        break;
+                    case 'w' :
+                        rotation = 'a';
+                        break;
+                    case 'a' :
+                        rotation = 's';
+                        break;
+                    case 'd' :
+                        rotation = 'w';
+                        break;
+                }
+            }
+
+
+            int i , j;
+            switch (rotation) {
+                case 's' :
+                    i =2 , j =-1;
+                    break;
+                case 'w' :
+                    i =-2 , j =1;
+                    break;
+                case 'a' :
+                    i =-1 , j =-2;
+                    break;
+                case 'd' :
+                    i =1 , j =2;
+                    break;
+            }
+            if (cloneboard[2 * (clonePlayer.y) + 1 + i][2 * (clonePlayer.x) + 1 + j] != 1) {
+                while (checkObstruction(cloneboard, clonePlayer, rotation) != 1) {
+                    if(move(cloneboard, clonePlayer, 's') == 0) return 0;
+                    count++;
+                    identifier = castraydown(n,cloneboard , clonePlayer.x*2+1 , clonePlayer.y*2+1);
+                    switch (rotation) {
+                        case 's' :
+                            rotation = 'a';
+                            break;
+                        case 'w' :
+                            rotation = 'd';
+                            break;
+                        case 'a' :
+                            rotation = 'w';
+                            break;
+                        case 'd' :
+                            rotation = 's';
+                            break;
+                    }
+                }
+            }else{
+                while (cloneboard[2 * (clonePlayer.y) + 1 +i][2 * (clonePlayer.x) + 1 +j] == 1) {
+                    if(move(cloneboard, clonePlayer, 's') == 0) return 0;
+                    count++;
+                    identifier = castraydown(n,cloneboard , clonePlayer.x*2+1 , clonePlayer.y*2+1);
+                }
+            }
+
+        }
+    }
+    if(identifier == 1) return 1;
     return 0;
 }
-
 
 int main(void) {
     //makes n by n board and makes it look good
@@ -198,13 +320,16 @@ int main(void) {
             int x , y , sw = -1;
             char r;
             do {
+                if(findpath(2 * n + 1, board , p1) == 0){
+                    deleteWall(n,board,x , y , r);
+                }
                 printf("give me the location and rotation");
                 scanf("%d %d %c" , &x , &y , &r);
                 sw = placeWall(n,board,x , y , r);
-            } while (sw == -1);
+            } while (sw == -1 || findpath(2 * n + 1, board , p1) == 0);
             p1.wallNumber--;
         }
-        printBoard(board, 2 * n + 1);
+        printBoard(board , 2*n +1);
 
 
         //player 2 does something
@@ -236,20 +361,7 @@ int main(void) {
         }
         printBoard(board, 2 * n + 1);
 
-
-
-
     }
-
-
-
-
-
-
-
-
-
-
     printBoard(board, 2 * n + 1);
 
     return 0;
