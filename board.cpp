@@ -393,18 +393,19 @@ int main(void) {
                 sw = move(board,p1, dir);
             } while (!sw);
         }else{
-            int x , y , sw = -1;
+            int x , y , sw = -1 , sw1 = 0;
             char r;
             do {
+                sw1 =0;
                 printf("give me the location and rotation");
                 scanf("%d %d %c" , &x , &y , &r);
                 sw = placeWall(n,board,x , y , r);
                 if(dfs( 2*n +1 , board , p1) == 0 || dfs( 2*n +1 , board , p2) == 0 ){
-                    printf("%d %d" ,dfs( 2*n +1 , board , p1) , dfs( 2*n +1 , board , p2));
                     deleteWall(n,board,x , y , r);
-                    printf("not there asshat\n");
+                    printf("cannot block someone\n");
+                    sw1 = -1;
                 }
-            } while (sw == -1 || dfs( 2*n +1 , board , p1) == 0 || dfs( 2*n +1 , board , p2) == 0 );
+            } while (sw == -1 || sw1 == -1);
             p1.wallNumber--;
         }
         printBoard(board , 2*n +1);
@@ -428,17 +429,19 @@ if(p1.y == n-1) break;
                 sw = move(board,p2, dir);
             } while (!sw);
         }else{
-            int x , y ,sw;
+            int x , y ,sw = -1 , sw1 =0;
             char r;
             do {
+                sw1 =0;
                 printf("give me the location and rotation");
                 scanf("%d %d %c" , &x , &y , &r);
                 sw = placeWall(n,board,x , y , r);
                 if(dfs( 2*n +1 , board , p1) == 0 || dfs( 2*n +1 , board , p2) == 0 ){
                     deleteWall(n,board,x , y , r);
-                    printf("not there asshat");
+                    printf("cannot block someone\n");
+                    sw1 = -1;
                 }
-            } while (sw == -1 || dfs( 2*n +1 , board , p1) == 0 || dfs( 2*n +1 , board , p2) == 0 );
+            } while (sw == -1 || sw1 == -1);
             p2.wallNumber--;
         }
         printBoard(board, 2 * n + 1);
