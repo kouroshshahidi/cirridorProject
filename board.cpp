@@ -37,6 +37,7 @@ void makeClone (int n, int board[][50], int clonedBoard[][50]) {
 int placeWall(int n ,int board[][50] , int wallx ,int wally , char rotation){
 
         if (rotation == 'H') {
+            if(board[2 * wallx][2 * wally] == 1 && board[2 * wallx][2 * wally+1] == 1)return -1;
             if (wallx != 0 && 2*wallx < 2*n + 1 &&  2 * wally + 4 < 2*n +1 && wally >= 0) {
                 for (int i = 0; i < 5; ++i) {
                     board[2 * wallx][2 * wally + i] = 1;
@@ -47,6 +48,7 @@ int placeWall(int n ,int board[][50] , int wallx ,int wally , char rotation){
             }
         }
         if (rotation == 'V') {
+            if(board[2 * wallx][2 * wally] ==1 && board[2 * wallx +1][2 * wally] ==1)return -1;
             if (wally != 0 && 2*wally < 2*n + 1 &&  2 * wallx + 4 < 2*n +1 && wallx >= 0) {
                 for (int i = 0; i < 5; ++i) {
                     board[2 * wallx + i][2 * wally] = 1;
@@ -219,96 +221,11 @@ int castrayUp(int n ,const int board[][50],int x ,int y){
     else return 0;
 }
 
-int findpath(int n ,int board[][50],player targerPlayer ) {
-    int cloneboard[50][50];
-    player clonePlayer;
-    clonePlayer = targerPlayer;
-    makeClone(n, board, cloneboard);
-    int identifier = 0 , count =0;
-
-    if(clonePlayer.id == 1) {
-        char rotation = 's';
-        while (checkObstruction(cloneboard, clonePlayer, 's') != 1) {
-            if(move(cloneboard, clonePlayer, 's') == 0) return 0;
-            identifier = castraydown(n,cloneboard , clonePlayer.x*2+1 , clonePlayer.y*2+1);
-        }
-
-        while (count < 100) {
-            if(identifier == 1) break;
-            while (checkObstruction(cloneboard, clonePlayer, rotation) == 1) {
-                switch (rotation) {
-                    case 's' :
-                        rotation = 'd';
-                        break;
-                    case 'w' :
-                        rotation = 'a';
-                        break;
-                    case 'a' :
-                        rotation = 's';
-                        break;
-                    case 'd' :
-                        rotation = 'w';
-                        break;
-                }
-            }
-
-
-            int i , j;
-            switch (rotation) {
-                case 's' :
-                    i =2 , j =-1;
-                    break;
-                case 'w' :
-                    i =-2 , j =1;
-                    break;
-                case 'a' :
-                    i =-1 , j =-2;
-                    break;
-                case 'd' :
-                    i =1 , j =2;
-                    break;
-            }
-            if (cloneboard[2 * (clonePlayer.y) + 1 + i][2 * (clonePlayer.x) + 1 + j] != 1) {
-                while (checkObstruction(cloneboard, clonePlayer, rotation) != 1) {
-                    if(move(cloneboard, clonePlayer, 's') == 0) return 0;
-                    count++;
-                    identifier = castraydown(n,cloneboard , clonePlayer.x*2+1 , clonePlayer.y*2+1);
-                    switch (rotation) {
-                        case 's' :
-                            rotation = 'a';
-                            break;
-                        case 'w' :
-                            rotation = 'd';
-                            break;
-                        case 'a' :
-                            rotation = 'w';
-                            break;
-                        case 'd' :
-                            rotation = 's';
-                            break;
-                    }
-                }
-            }else{
-                while (cloneboard[2 * (clonePlayer.y) + 1 +i][2 * (clonePlayer.x) + 1 +j] == 1) {
-                    if(move(cloneboard, clonePlayer, 's') == 0) return 0;
-                    count++;
-                    identifier = castraydown(n,cloneboard , clonePlayer.x*2+1 , clonePlayer.y*2+1);
-                }
-            }
-
-        }
-    }
-    if(identifier == 1) return 1;
-    return 0;
-}
-
 int dfs(int n ,int board[][50],player targetPlayer){
     int cloneboard[50][50];
     player clonePlayer;
     clonePlayer = targetPlayer;
     makeClone(n, board, cloneboard);
-    placeWall(n , cloneboard , 1 ,2 ,'H');
-    placeWall(n , cloneboard , 1 ,0 ,'H');
 if((castraydown(n,cloneboard , clonePlayer.x*2+1 , clonePlayer.y*2+1) == 1 && clonePlayer.id == 1)|| (castrayUp(n,cloneboard , clonePlayer.x*2+1 , clonePlayer.y*2+1) == 1 && clonePlayer.id == 2) ){
     return 1;
 } else {
