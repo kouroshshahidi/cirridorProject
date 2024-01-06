@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <wchar.h>
+#include <time.h>
+#include <stdlib.h>
 //data storage
 struct player{
     int id;
@@ -8,6 +10,14 @@ struct player{
     int wallNumber;
 
 };
+char directions[4]{'w' , 'a' , 's' , 'd'};
+int bot(int movementStage , int n){
+    srand (time(NULL));
+    if(movementStage == 1)return rand() % 2 + 1;
+    if(movementStage == 2)return rand() % 4;
+    if(movementStage == 3)return rand() % 4;
+    return 0;
+}
 int checkObstruction(int board[][50] , player player , char direction){
     int currentX =2*(player.x)+1, currentY = 2*(player.y)+1;
     if(direction == 'w'){
@@ -37,10 +47,10 @@ void makeClone (int n, int board[][50], int clonedBoard[][50]) {
 int placeWall(int n ,int board[][50] , int wallx ,int wally , char rotation){
 
         if (rotation == 'H') {
-            if(board[2 * wallx][2 * wally] == 1 && board[2 * wallx][2 * wally+1] == 1)return -1;
+            if(board[2 * wallx][2 * wally + 2] == 1)return -1;
             if (wallx != 0 && 2*wallx < 2*n + 1 &&  2 * wally + 4 < 2*n +1 && wally >= 0) {
-                for (int i = 0; i < 5; ++i) {
-                    board[2 * wallx][2 * wally + i] = 1;
+                for (int i = 0; i < 3; ++i) {
+                    board[2 * wallx][2 * wally + 1 + i] = 1;
                 }
                 return 0;
             } else{
@@ -48,10 +58,10 @@ int placeWall(int n ,int board[][50] , int wallx ,int wally , char rotation){
             }
         }
         if (rotation == 'V') {
-            if(board[2 * wallx][2 * wally] ==1 && board[2 * wallx +1][2 * wally] ==1)return -1;
+            if(board[2 * wallx + 2][2 * wally] == 1)return -1;
             if (wally != 0 && 2*wally < 2*n + 1 &&  2 * wallx + 4 < 2*n +1 && wallx >= 0) {
-                for (int i = 0; i < 5; ++i) {
-                    board[2 * wallx + i][2 * wally] = 1;
+                for (int i = 0; i < 3; ++i) {
+                    board[2 * wallx +1 + i][2 * wally] = 1;
                 }
                 return 0;
             } else{
@@ -66,8 +76,8 @@ int deleteWall(int n ,int board[][50] , int wallx ,int wally , char rotation){
 
     if (rotation == 'H') {
         if (wallx != 0 && 2*wallx < 2*n + 1 &&  2 * wally + 4 < 2*n +1 && wally >= 0) {
-            for (int i = 0; i < 5; ++i) {
-                board[2 * wallx][2 * wally + i] = 0;
+            for (int i = 0; i < 3; ++i) {
+                board[2 * wallx][2 * wally + i +1] = 0;
             }
             return 0;
         } else{
@@ -76,8 +86,8 @@ int deleteWall(int n ,int board[][50] , int wallx ,int wally , char rotation){
     }
     if (rotation == 'V') {
         if (wally != 0 && 2*wally < 2*n + 1 &&  2 * wallx + 4 < 2*n +1 && wallx >= 0) {
-            for (int i = 0; i < 5; ++i) {
-                board[2 * wallx + i][2 * wally] = 0;
+            for (int i = 0; i < 3; ++i) {
+                board[2 * wallx + 1 +i][2 * wally] = 0;
             }
             return 0;
         } else{
@@ -86,17 +96,6 @@ int deleteWall(int n ,int board[][50] , int wallx ,int wally , char rotation){
     }
 
     return -1;
-}
-
-int intprintBoard(int arr[][50], int n) {
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            printf("%d ", arr[i][j]);
-        }
-        printf("\n");
-    }
-
-    return 0;
 }
 
 int printBoard(int arr[][50], int n) {
@@ -314,7 +313,7 @@ int main(void) {
             char r;
             do {
                 sw1 =0;
-                printf("give me the location and rotation");
+                printf("give me the location and rotation\n");
                 scanf("%d %d %c" , &x , &y , &r);
                 sw = placeWall(n,board,x , y , r);
                 if(dfs( 2*n +1 , board , p1) == 0 || dfs( 2*n +1 , board , p2) == 0 ){
@@ -350,7 +349,7 @@ if(p1.y == n-1) break;
             char r;
             do {
                 sw1 =0;
-                printf("give me the location and rotation");
+                printf("give me the location and rotation\n");
                 scanf("%d %d %c" , &x , &y , &r);
                 sw = placeWall(n,board,x , y , r);
                 if(dfs( 2*n +1 , board , p1) == 0 || dfs( 2*n +1 , board , p2) == 0 ){
